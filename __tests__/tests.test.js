@@ -54,7 +54,7 @@ describe("/api/articles/:article_id", () => {
           expect(res.body.article).toHaveProperty("article_img_url");
         });
     });
-    test("get 400, Bad Request. When wrong type of request if made", () => {
+    test("get 400, Bad Request. When invalid article_id is put on request", () => {
       return request(app)
         .get("/api/articles/banana")
         .expect(400)
