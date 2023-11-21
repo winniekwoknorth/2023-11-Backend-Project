@@ -3,7 +3,6 @@ const request = require("supertest");
 const db = require("../db/connection.js");
 const seed = require("../db/seeds/seed.js");
 const {topicData, userData, articleData, commentData } = require("../db/data/test-data/index.js");
-const {getTopics}= require('../controllers/topics.controllers.js')
 beforeEach(() => seed({topicData, userData, articleData, commentData}));
 afterAll(() => db.end());
 

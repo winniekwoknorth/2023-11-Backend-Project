@@ -6,6 +6,3 @@ exports.getApi = (req, res, next) => {
     })
        .catch(next);
 };
-
-
-    
