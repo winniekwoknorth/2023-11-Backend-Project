@@ -1,4 +1,4 @@
-const {selectArticles} = require('../models/articles.models.js');
+const {selectArticles, selectAllArticles} = require('../models/articles.models.js');
 
 exports.getArticlesById = (req, res, next) => {
     const { article_id } = req.params
@@ -7,3 +7,12 @@ exports.getArticlesById = (req, res, next) => {
     })
        .catch(next);
 };
+
+exports.getArticles = (req, res, next) => {
+    const { sort_by, order } = req.query
+    selectAllArticles(sort_by,order).then((articles) => {
+     res.status(200).send({ articles });
+    })
+       .catch(next);
+};
+

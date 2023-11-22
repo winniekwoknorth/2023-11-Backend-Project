@@ -3,8 +3,10 @@ const request = require("supertest");
 const db = require("../db/connection.js");
 const seed = require("../db/seeds/seed.js");
 const {topicData, userData, articleData, commentData } = require("../db/data/test-data/index.js");
-beforeEach(() => seed({topicData, userData, articleData, commentData}));
+
+beforeEach(() => seed({ topicData, userData, articleData, commentData }));
 afterAll(() => db.end());
+
 //task 2
 describe("get/api/topics", () => {
     test("get 200, then an array with all topics", () => {
@@ -72,4 +74,81 @@ describe("/api/articles/:article_id", () => {
     })
   });
   
-
+//task 5
+describe("/api/articles/", () => {
+  test("get 200, then an array with all articles and sorted by created_at in descending order by default", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((res) => {
+        expect(typeof (res.body)).toBe('object')
+        expect(res.body.articles.length).toBe(13)
+        expect(res.body.articles[0]).toMatchObject({
+          article_id: 3,
+          title: 'Eight pug gifs that remind me of mitch',
+          topic: 'mitch',
+          author: 'icellusedkars',
+          body: 'some gifs',
+          created_at: '2020-11-03T09:12:00.000Z',
+          votes: 0,
+          article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+          comment_count: '2'
+        })
+        expect(res.body.articles).toBeSortedBy('created_at', { descending: true })
+      });
+  })
+  test("get 200, and return sorted array by article_id in decending order", () => {
+    return request(app)
+        .get("/api/articles?order=desc&sort_by=article_id")
+        .expect(200)
+      .then((res) => {  
+            expect(typeof (res.body)).toBe('object')
+            expect(res.body.articles.length).toBe(13)
+            expect(res.body.articles).toBeSortedBy('article_id',{descending: true})
+        });
+        
+})
+test("get 200, and return sorted array by article_id in ascending order", () => {
+  return request(app)
+      .get("/api/articles?order=asc&sort_by=article_id")
+      .expect(200)
+    .then((res) => {  
+          expect(typeof (res.body)).toBe('object')
+          expect(res.body.articles.length).toBe(13)
+          expect(res.body.articles).toBeSortedBy('article_id',{ascending: true})
+      });
+      
+})
+test("get 200, and return sorted array by author and by default in descending order", () => {
+  return request(app)
+      .get("/api/articles?sort_by=author")
+      .expect(200)
+    .then((res) => {  
+          expect(typeof (res.body)).toBe('object')
+          expect(res.body.articles.length).toBe(13)
+          expect(res.body.articles).toBeSortedBy('author',{descending: true})
+      });
+      
+})
+test("get 200, and return sorted array by topic and by default in descending order", () => {
+  return request(app)
+      .get("/api/articles?sort_by=topic")
+      .expect(200)
+    .then((res) => {  
+          expect(typeof (res.body)).toBe('object')
+          expect(res.body.articles.length).toBe(13)
+          expect(res.body.articles).toBeSortedBy('topic',{descending: true})
+      });
+      
+})
+  
+test("get 400, by request if request is not listed in endpoint.json", () => {
+  return request(app)
+  .get("/api/articles?sort_by=title")
+  .expect(400)
+  .then((res) => {
+    expect(res.body.msg).toBe('Bad request')
+})
+      
+})
+})

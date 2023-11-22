@@ -13,3 +13,34 @@ exports.selectArticles= (article_id) => {
         })
 }
 
+exports.selectAllArticles= (sort_by,order) => {
+    let queryString = `SELECT articles.*, 
+    COUNT(comment_id) AS 
+    comment_count 
+    FROM articles LEFT JOIN comments on articles.article_id=comments.article_id 
+    GROUP BY articles.article_id `
+    const validSort_By = ["article_id","author", "topic"]
+    if (sort_by && ! validSort_By.includes(sort_by)) {
+        return Promise.reject({ status: 400, msg: 'Bad request' });
+    }
+    const validOrder= ['asc','desc']
+    if (order && !validOrder.includes(order)) {
+        return Promise.reject({ status: 400, msg: 'Bad request' });
+    }
+    else if (sort_by &&order) {
+        queryString += `ORDER BY ${sort_by} ${order}`}
+       
+    else if (sort_by) {
+        queryString += `ORDER BY ${sort_by} DESC`
+    }
+    else if (order) {
+        queryString += `ORDER BY created_at ${order}`
+       }
+    
+    else { queryString +=`ORDER BY created_at DESC`
+}  
+    return db.query(queryString)
+    .then((result) => {
+            return result.rows;
+        })
+}
