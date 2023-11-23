@@ -150,7 +150,7 @@ describe("/api/articles/", () => {
       });
   });
 
-  test("get 400, by request if request is not listed in endpoint.json", () => {
+  test("get 400, bad request if request is not listed in endpoint.json", () => {
     return request(app)
       .get("/api/articles?sort_by=title")
       .expect(400)
@@ -159,3 +159,49 @@ describe("/api/articles/", () => {
       });
   });
 });
+
+//task 6
+describe("api/articles/:article_id/comments", () => {
+  test("get 200, and return sorted array of comments of required article_id by created_at in descending order by default", () => {
+    return request(app)
+      .get("/api/articles/3/comments")
+      .expect(200)
+      .then((res) => {
+        expect(typeof res.body).toBe("object");
+        expect(res.body.comments.length).toBe(2);
+        expect(res.body.comments).toBeSortedBy("created_at", { descending: true });
+        expect(res.body.comments[0]).toMatchObject( {
+          comment_id: 11,
+          body: 'Ambidextrous marsupial',
+          article_id: 3,
+          author: 'icellusedkars',
+          votes: 0,
+          created_at: '2020-09-19T23:10:00.000Z'
+        })
+        res.body.comments.forEach((comment) => {
+          expect(comment).toHaveProperty("comment_id");
+          expect(comment).toHaveProperty("body");
+          expect(comment).toHaveProperty("article_id");
+          expect(comment).toHaveProperty("author");
+          expect(comment).toHaveProperty("votes");
+          expect(comment).toHaveProperty("created_at")
+        });
+      });
+  })
+  test.only("get 400, bad request if request is invalid type", () => {
+    return request(app)
+      .get("/api/articles/banana/comments")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  })
+  test.only("get 404, not found if request is not found in database", () => {
+    return request(app)
+      .get("/api/articles/999/comments")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("comments does not exist");
+      });
+  })
+})
