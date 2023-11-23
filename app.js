@@ -2,7 +2,8 @@ const express = require('express');
 const app = express();
 const { getTopics } = require('./controllers/topics.controllers.js')
 const { getApi } = require('./controllers/api.controllers.js')
-const {getArticlesById, getArticles, getCommentsByArticleId}= require('./controllers/articles.controllers.js')
+const {getArticlesById, getArticles}= require('./controllers/articles.controllers.js')
+const {getCommentsByArticleId}= require('./controllers/comments.controllers.js')
 const { handleCustomErrors, handlePsqlErrors, handleServerErrors } = require('./err.js');
 
 app.get('/api/topics', getTopics)
