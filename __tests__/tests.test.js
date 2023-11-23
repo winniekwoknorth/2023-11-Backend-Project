@@ -185,7 +185,7 @@ describe("api/articles/:article_id/comments", () => {
       .get("/api/articles/2/comments")
       .expect(200)
       .then((res) => {
-        expect(typeof res.body).toBe("object");
+        expect(res.body.comments).toEqual([]);
         
       });
   })
