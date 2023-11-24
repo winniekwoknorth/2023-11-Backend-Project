@@ -291,56 +291,32 @@ describe('post/api/articles/:article_id/comments', () => {
   })
 })
 
-//task 8
-// describe('patch/api/articles/:article_id/', () => {
-//   test('201: response with add comments to database', () => {
-//     const update = {
-//       inc_votes: 1
-//     }
-//     return request(app)
-//       .patch('/api/articles/3/')
-//       .send(update)
-//       .expect(201)
-//       .then((res) => {
-//         console.log(res.body)
-//         expect(res.body.articles.votes).toBe(1) 
-//         expect(res.body.articles).toMatchObject({
-//           article_id: 3,
-//           title: 'Eight pug gifs that remind me of mitch',
-//           topic: 'mitch',
-//           author: 'icellusedkars',
-//           body: 'some gifs',
-//           created_at: '2020-11-03T09:12:00.000Z',
-//           votes: 1,
-//           article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
-//         })
-//       })
-//   })
-//   test.only('201: the votes number is add on but not replace by new value', () => {
-//     const update = {
-//       inc_votes: 1
-//     }
-//     return request(app)
-//       .patch('/api/articles/99/')
-//       .send(update)
-//       .expect(400)
-//       .then((res) => {
-//         console.log(res.body)
-//         expect(res.body.articles.votes).toBe(101) 
-//       })
-//   })
-// })
 
-// //task 9 
-// describe('delete/api/comments/:comment_id', () => {
-//   test('204: no response send back', () => {
-//     return request(app)
-//       .delete('api/comments/:comment_id')
-//       .send()
-//       .expect(204)
-//       .then((res) => {
-//         expect(res.body).toBe({})
+
+//task 9 
+describe('delete/api/comments/:comment_id', () => {
+  test('204: no response send back', () => {
+    return request(app)
+      .delete('/api/comments/1')
+      .expect(204)
+      
+       
         
-//       })
-//   })
-// })
+  })
+  test('400: Bad request if comment_id is invalid', () => {
+    return request(app)
+      .delete('/api/comments/banana')
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  })
+  test('404: Bad request if comment_id is invalid', () => {
+    return request(app)
+      .delete('/api/comments/99')
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("comment not exist");
+      });
+  })
+})

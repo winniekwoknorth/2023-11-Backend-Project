@@ -15,7 +15,7 @@ app.get('/api/articles/:article_id', getArticlesById)
 
 app.get('/api/articles/:article_id/comments', getCommentsByArticleId)
 app.post('/api/articles/:article_id/comments', postCommentsByArticleId)
-app.delete('api/comments/:comment_id', deleteCommentByCommentId)
+app.delete('/api/comments/:comment_id', deleteCommentByCommentId)
 app.patch('/api/articles/:article_id', patchArticlesById)
 app.use(handleCustomErrors)
 app.use(handlePsqlErrors)

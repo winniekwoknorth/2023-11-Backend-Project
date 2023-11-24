@@ -23,10 +23,19 @@ exports.addComments = (article_id, newComments) => {
 
 }
 exports.deleteComments = (comment_id) => {
-    return db.query(`DELETE FROM comments WHERE comment_id= $1
-    RETURNING *; `, [comment_id])
+    return db.query(`DELETE FROM comments WHERE comment_id= $1 RETURNING *; `, [comment_id])
         .then((result) => {
             return result.rows[0]
         })
 
+}
+
+exports.checkCommentIdExists = (comment_id) => {
+    return db.query(`SELECT * FROM comments WHERE comment_id=$1`, [comment_id])
+        .then(({ rows }) => {
+            if (!rows.length) {
+                return Promise.reject({status:404, msg:"comment not exist"})
+            }
+            return {rows}
+    })
 }
