@@ -293,7 +293,7 @@ describe('post/api/articles/:article_id/comments', () => {
 
 // task 8
 describe('patch/api/articles/:article_id/', () => {
-  test.only('201: response with add comments to database', () => {
+  test('201: response with add comments to database', () => {
     const update = {
       inc_votes: 1
     }
@@ -327,7 +327,7 @@ describe('patch/api/articles/:article_id/', () => {
         expect(res.body.articles.votes).toBe(101) 
       })
   })
-  test.only('201: ignore properties add beside inc_votes and return a updated article', () => {
+  test('201: ignore properties add beside inc_votes and return a updated article', () => {
     const update = {
       inc_votes: 1,
       comment:'good'
@@ -363,5 +363,33 @@ describe('patch/api/articles/:article_id/', () => {
       .then((res) => {
         expect(res.body.msg).toBe("article not exist");
       });
-      })
   })
+  test('400: Bad request, if sending invalid inc_votes value', () => {
+    const update = {
+      inc_votes:'banana'
+    }
+    return request(app)
+      .patch('/api/articles/1/')
+      .send(update)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  })
+
+  test('400: Bad request, if sending invalid path of endpoint', () => {
+    const update = {
+      inc_votes:'1'
+    }
+    return request(app)
+      .patch('/api/articles/banana/')
+      .send(update)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+      })
+  
+})
+  
+

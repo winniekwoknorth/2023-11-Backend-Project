@@ -19,7 +19,6 @@ exports.postCommentsByArticleId = (req, res, next) => {
     const newComments = req.body
     addComments(article_id, newComments)
         .then((comments) => {
-        console.log(comments)
         res.status(201).send({comments})
     })
     .catch(next)
