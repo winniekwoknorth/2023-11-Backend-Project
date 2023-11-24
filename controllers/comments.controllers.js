@@ -1,5 +1,5 @@
 const { checkArticleIdExists } = require('../models/articles.models.js')
-const { selectComments, addComments } = require('../models/comments.models.js')
+const { selectComments, addComments, deleteComments } = require('../models/comments.models.js')
 
 exports.getCommentsByArticleId = (req, res, next) => {
     const { article_id } = req.params
@@ -24,4 +24,12 @@ exports.postCommentsByArticleId = (req, res, next) => {
     })
     .catch(next)
 }
-
+exports.deleteCommentByCommentId = (req, res, next) => {
+    const { comment_id } = req.params
+    deleteComments(comment_id)
+        .then((deleted) => {
+        console.log(deleted)
+        res.status(204).send()
+    })
+    .catch(next)
+}
