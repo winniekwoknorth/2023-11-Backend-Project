@@ -292,7 +292,7 @@ describe('post/api/articles/:article_id/comments', () => {
 })
 
 // task 8
-describe('patch/api/articles/:article_id/', () => {
+describe.only('patch/api/articles/:article_id/', () => {
   test('201: response with add comments to database', () => {
     const update = {
       inc_votes: 1
