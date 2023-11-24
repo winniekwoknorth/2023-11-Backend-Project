@@ -291,42 +291,105 @@ describe('post/api/articles/:article_id/comments', () => {
   })
 })
 
-//task 8
-// describe('patch/api/articles/:article_id/', () => {
-//   test('201: response with add comments to database', () => {
-//     const update = {
-//       inc_votes: 1
-//     }
-//     return request(app)
-//       .patch('/api/articles/3/')
-//       .send(update)
-//       .expect(201)
-//       .then((res) => {
-//         console.log(res.body)
-//         expect(res.body.articles.votes).toBe(1) 
-//         expect(res.body.articles).toMatchObject({
-//           article_id: 3,
-//           title: 'Eight pug gifs that remind me of mitch',
-//           topic: 'mitch',
-//           author: 'icellusedkars',
-//           body: 'some gifs',
-//           created_at: '2020-11-03T09:12:00.000Z',
-//           votes: 1,
-//           article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
-//         })
-//       })
-//   })
-//   test.only('201: the votes number is add on but not replace by new value', () => {
-//     const update = {
-//       inc_votes: 1
-//     }
-//     return request(app)
-//       .patch('/api/articles/99/')
-//       .send(update)
-//       .expect(400)
-//       .then((res) => {
-//         console.log(res.body)
-//         expect(res.body.articles.votes).toBe(101) 
-//       })
-//   })
-// })
+// task 8
+describe('patch/api/articles/:article_id/', () => {
+  test('201: response with add comments to database', () => {
+    const update = {
+      inc_votes: 1
+    }
+    return request(app)
+      .patch('/api/articles/3/')
+      .send(update)
+      .expect(201)
+      .then((res) => {
+        expect(res.body.articles.votes).toBe(1) 
+        expect(res.body.articles).toMatchObject({
+          article_id: 3,
+          title: 'Eight pug gifs that remind me of mitch',
+          topic: 'mitch',
+          author: 'icellusedkars',
+          body: 'some gifs',
+          created_at: '2020-11-03T09:12:00.000Z',
+          votes: 1,
+          article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+        })
+      })
+  })
+  test('201: the votes number is add on but not replace by new value', () => {
+    const update = {
+      inc_votes: 1
+    }
+    return request(app)
+      .patch('/api/articles/1/')
+      .send(update)
+      .expect(201)
+      .then((res) => {
+        expect(res.body.articles.votes).toBe(101) 
+      })
+  })
+  test('201: ignore properties add beside inc_votes and return a updated article', () => {
+    const update = {
+      inc_votes: 1,
+      comment:'good'
+    }
+    return request(app)
+      .patch('/api/articles/3/')
+      .send(update)
+      .expect(201)
+      .then((res) => {
+        expect(res.body.articles.votes).toBe(1) 
+        expect(res.body.articles.votes).not.toHaveProperty('comment') 
+        expect(res.body.articles).toMatchObject({
+          article_id: 3,
+          title: 'Eight pug gifs that remind me of mitch',
+          topic: 'mitch',
+          author: 'icellusedkars',
+          body: 'some gifs',
+          created_at: '2020-11-03T09:12:00.000Z',
+          votes: 1,
+          article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+        })
+      })
+  })
+
+  test('404: if the article_id is not found in articles table', () => {
+    const update = {
+      inc_votes: 1
+    }
+    return request(app)
+      .patch('/api/articles/99/')
+      .send(update)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("article not exist");
+      });
+  })
+  test('400: Bad request, if sending invalid inc_votes value', () => {
+    const update = {
+      inc_votes:'banana'
+    }
+    return request(app)
+      .patch('/api/articles/1/')
+      .send(update)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  })
+
+  test('400: Bad request, if sending invalid path of endpoint', () => {
+    const update = {
+      inc_votes:'1'
+    }
+    return request(app)
+      .patch('/api/articles/banana/')
+      .send(update)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+      })
+  
+})
+  
+
