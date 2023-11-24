@@ -17,13 +17,12 @@ exports.getArticles = (req, res, next) => {
        .catch(next);
 };
 
-// exports.patchArticlesById = (req, res, next) => {
-//     const { article_id } = req.params
-//     const change= req.body
-//     updateArticles(article_id, change).then((articles) => {
-//         console.log(articles)
-//         res.status(201).send({articles})
-//     })
-//         .catch(next)
-// }
+exports.patchArticlesById = (req, res, next) => {
+    const { article_id } = req.params
+    const change= req.body
+    updateArticles(article_id, change).then((articles) => {
+        res.status(201).send({articles})
+    })
+        .catch(next)
+}
 

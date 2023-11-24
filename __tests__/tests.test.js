@@ -8,6 +8,7 @@ const {
   articleData,
   commentData,
 } = require("../db/data/test-data/index.js");
+const { expect } = require("@jest/globals");
 
 beforeEach(() => seed({ topicData, userData, articleData, commentData }));
 afterAll(() => db.end());
@@ -227,7 +228,30 @@ describe('post/api/articles/:article_id/comments', () => {
         expect(res.body.comments).toHaveProperty("created_at")
       })
   })
-  test('400: Bad request if reqest to a endpoint not exist', () => {
+  test('201: ignore properties add beside username and body and return a new comment', () => {
+    const newComments = {
+      username: 'butter_bridge',
+      body: 'great',
+      votes: 1,
+      message: "hello"
+    }
+    return request(app)
+      .post('/api/articles/2/comments')
+      .send(newComments)
+      .expect(201)
+      .then((res) => {
+        expect(res.body.comments).toMatchObject({
+          comment_id: 19,
+          body: 'great',
+          article_id: 2,
+          author: 'butter_bridge',
+          votes: 0,
+        })
+        expect(res.body.comments).toHaveProperty("created_at")
+  
+      })
+  })
+  test('404: Bad request if reqest to a endpoint not exist', () => {
     const newComments = {
       username: 'butter_bridge',
       body: 'great'
@@ -235,9 +259,9 @@ describe('post/api/articles/:article_id/comments', () => {
     return request(app)
       .post('/api/articles/99/comments')
       .send(newComments)
-      .expect(400)
+      .expect(404)
       .then((res) => {
-        expect(res.body.msg).toBe("Bad request");
+        expect(res.body.msg).toBe("Not exist");
       });
   })
   test('400: Bad request if post reqest missing essential data, e.g. missing body', () => {
@@ -252,11 +276,24 @@ describe('post/api/articles/:article_id/comments', () => {
         expect(res.body.msg).toBe("Bad request");
       });
   })
+  test('404: Bad not found if post with username not found in users table', () => {
+    const newComments = {
+      username: 'winnie',
+      body: 'great'
+    }
+    return request(app)
+      .post('/api/articles/2/comments')
+      .send(newComments)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Not exist");
+      });
+  })
 })
 
 //task 8
 // describe('patch/api/articles/:article_id/', () => {
-//   test.only('201: response with add comments to database', () => {
+//   test('201: response with add comments to database', () => {
 //     const update = {
 //       inc_votes: 1
 //     }
@@ -266,7 +303,30 @@ describe('post/api/articles/:article_id/comments', () => {
 //       .expect(201)
 //       .then((res) => {
 //         console.log(res.body)
-//         expect(res.body.articles).toBe(1) 
+//         expect(res.body.articles.votes).toBe(1) 
+//         expect(res.body.articles).toMatchObject({
+//           article_id: 3,
+//           title: 'Eight pug gifs that remind me of mitch',
+//           topic: 'mitch',
+//           author: 'icellusedkars',
+//           body: 'some gifs',
+//           created_at: '2020-11-03T09:12:00.000Z',
+//           votes: 1,
+//           article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+//         })
+//       })
+//   })
+//   test.only('201: the votes number is add on but not replace by new value', () => {
+//     const update = {
+//       inc_votes: 1
+//     }
+//     return request(app)
+//       .patch('/api/articles/99/')
+//       .send(update)
+//       .expect(400)
+//       .then((res) => {
+//         console.log(res.body)
+//         expect(res.body.articles.votes).toBe(101) 
 //       })
 //   })
 // })
