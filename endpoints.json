@@ -55,7 +55,21 @@
       "votes": 0,
       "created_at": "2020-09-19T23:10:00.000Z"
     }}
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "add comments to the comments table for specified article_id",
+    "queries": [],
+    "exampleResponse": {"comment":
+    {
+      "comment_id": 19,
+      "body": "great",
+      "article_id": 2,
+      "author": "butter_bridge",
+      "votes": 0,
+      "created_at": "2023-11-23T16:50:05.564Z"
+    }}
   }
+  
 }
 
 

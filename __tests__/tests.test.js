@@ -206,3 +206,67 @@ describe("api/articles/:article_id/comments", () => {
       });
   })
 })
+//task 7
+describe('post/api/articles/:article_id/comments', () => {
+  test('201: response with add comments to database', () => {
+    const newComments = {
+      username: 'butter_bridge',
+      body: 'great'
+    }
+    return request(app)
+      .post('/api/articles/2/comments')
+      .send(newComments)
+      .expect(201)
+      .then((res) => {
+        expect(res.body.comments.comment_id).toBe(19)
+        expect(res.body.comments).toHaveProperty("comment_id")
+        expect(res.body.comments).toHaveProperty("body")
+        expect(res.body.comments).toHaveProperty("article_id")
+        expect(res.body.comments).toHaveProperty("author")
+        expect(res.body.comments).toHaveProperty("votes")
+        expect(res.body.comments).toHaveProperty("created_at")
+      })
+  })
+  test('400: Bad request if reqest to a endpoint not exist', () => {
+    const newComments = {
+      username: 'butter_bridge',
+      body: 'great'
+    }
+    return request(app)
+      .post('/api/articles/99/comments')
+      .send(newComments)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  })
+  test('400: Bad request if post reqest missing essential data, e.g. missing body', () => {
+    const newComments = {
+      username: 'butter_bridge'
+    }
+    return request(app)
+      .post('/api/articles/2/comments')
+      .send(newComments)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  })
+})
+
+//task 8
+// describe('patch/api/articles/:article_id/', () => {
+//   test.only('201: response with add comments to database', () => {
+//     const update = {
+//       inc_votes: 1
+//     }
+//     return request(app)
+//       .patch('/api/articles/3/')
+//       .send(update)
+//       .expect(201)
+//       .then((res) => {
+//         console.log(res.body)
+//         expect(res.body.articles).toBe(1) 
+//       })
+//   })
+// })
