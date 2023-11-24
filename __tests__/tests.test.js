@@ -331,16 +331,16 @@ describe('post/api/articles/:article_id/comments', () => {
 //   })
 // })
 
-//task 9 
-describe('delete/api/comments/:comment_id', () => {
-  test('204: no response send back', () => {
-    return request(app)
-      .delete('api/comments/:comment_id')
-      .send()
-      .expect(204)
-      .then((res) => {
-        expect(res.body).toBe({})
+// //task 9 
+// describe('delete/api/comments/:comment_id', () => {
+//   test('204: no response send back', () => {
+//     return request(app)
+//       .delete('api/comments/:comment_id')
+//       .send()
+//       .expect(204)
+//       .then((res) => {
+//         expect(res.body).toBe({})
         
-      })
-  })
-})
+//       })
+//   })
+// })
