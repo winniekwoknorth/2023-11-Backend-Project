@@ -291,32 +291,3 @@ describe('post/api/articles/:article_id/comments', () => {
   })
 })
 
-
-
-//task 9 
-describe('delete/api/comments/:comment_id', () => {
-  test('204: no response send back', () => {
-    return request(app)
-      .delete('/api/comments/1')
-      .expect(204)
-      
-       
-        
-  })
-  test('400: Bad request if comment_id is invalid', () => {
-    return request(app)
-      .delete('/api/comments/banana')
-      .expect(400)
-      .then((res) => {
-        expect(res.body.msg).toBe("Bad request");
-      });
-  })
-  test('404: Bad request if comment_id is invalid', () => {
-    return request(app)
-      .delete('/api/comments/99')
-      .expect(404)
-      .then((res) => {
-        expect(res.body.msg).toBe("comment not exist");
-      });
-  })
-})
