@@ -292,7 +292,7 @@ describe('post/api/articles/:article_id/comments', () => {
 })
 
 // task 8
-describe.only('patch/api/articles/:article_id/', () => {
+describe('patch/api/articles/:article_id/', () => {
   test('201: response with add comments to database', () => {
     const update = {
       inc_votes: 1
@@ -418,6 +418,26 @@ describe('delete/api/comments/:comment_id', () => {
       .expect(404)
       .then((res) => {
         expect(res.body.msg).toBe("comment not exist");
+      });
+  })
+})
+
+//task 10
+describe.only("/api/users/", () => {
+  test("get 200, then an array with all users", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((res) => {
+        expect(typeof res.body).toBe("object");
+        //console.log(res.body)
+        expect(res.body.users.length).toBe(4);
+        res.body.users.forEach((user) => {
+          expect(user).toHaveProperty("username");
+          expect(user).toHaveProperty("name");
+          expect(user).toHaveProperty("avatar_url");
+        });
+       
       });
   })
 })
